@@ -27,7 +27,7 @@ class IVtest(unittest.TestCase):
         # save(mode='configs', path=self.configs['results_base_dir'], filename='test_configs.json', overwrite=self.configs['overwrite_results'], data=self.configs)
 
         self.processor = get_driver(self.configs['processor'])
-        experiments = ["IV1", "IV2", "IV3", "IV4", "IV5", "IV6", "IV7"]
+        experiments = ["IV1", "IV2", "IV3", "IV4"] #, "IV5", "IV6", "IV7"]
         self.devices_in_experiments = {}
         output = {}
         output_array = []
@@ -135,7 +135,7 @@ class IVtest(unittest.TestCase):
             for i in range(2):
                 for j in range(4):
                     exp = "IV" + str(j + i * 4 + 1)
-                    if j + i * 4 < 7:
+                    if j + i * 4 < 4:
                         if self.configs["processor"]['driver']['instruments_setup'][dev]["activation_channel_mask"][j + i * 4] == 1:
                             axs[i, j].plot(xaxis, output[exp][dev])
                             axs[i, j].set_ylabel('output (nA)', labelpad=ylabeldist)
@@ -164,16 +164,16 @@ if __name__ == '__main__':
     configs = {}
     configs['results_base_dir'] = 'tmp/tests/iv'
     configs['show_plots'] = True
-    configs['devices'] = ['A', 'B', 'C', "D", 'E']
+    configs['devices'] = ['A']#, 'B', 'C', "D", 'E']
     configs['shape'] = 500  # length of the experiment
     configs['waveform'] = {}
-    configs['waveform']['V_high'] = 0.75
-    configs['waveform']['V_low'] = -0.75
+    configs['waveform']['V_high'] = 1.25
+    configs['waveform']['V_low'] = -1.25
     configs['waveform']['input_type'] = 'sine'
     configs['waveform']['time'] = 5
     configs['waveform']['direction'] = 'up'
 
-    configs['processor'] = load_configs('C:/Users/braml/Documents/Github/ring-example/processor_iv_curves.yaml')
+    configs['processor'] = load_configs('C:/Users/bram/Documents/Github/examples-multiple-devices/processor_iv_curves.yaml')
 
     suite = unittest.TestSuite()
     suite.addTest(IVtest(configs))

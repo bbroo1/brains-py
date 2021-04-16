@@ -47,6 +47,7 @@ class Processor(nn.Module):
             elif configs["processor_type"] == "simulation_debug" or configs["processor_type"] == "cdaq_to_cdaq" or configs["processor_type"] == "cdaq_to_nidaq":
                 self.processor = HardwareProcessor(configs)
                 self.electrode_no = configs['data']['activation_electrode_no']
+                
             else:
                 raise NotImplementedError(
                     f"Platform {configs['platform']} is not recognised. The platform has to be either simulation, simulation_debug, cdaq_to_cdaq or cdaq_to_nidaq. "
@@ -73,6 +74,7 @@ class Processor(nn.Module):
         )
         return self.processor(merged_data)
 
+
     def get_input_ranges(self):
         return self.processor.voltage_ranges[self.data_input_indices]
 
@@ -80,7 +82,7 @@ class Processor(nn.Module):
         return self.processor.voltage_ranges[self.control_indices]
 
     def get_clipping_value(self):
-        return self.processor.clipping_value
+        return self.processor.get_clipping_value()
 
     def _get_configs(self):
         if isinstance(self.processor, HardwareProcessor):

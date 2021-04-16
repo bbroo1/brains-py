@@ -34,7 +34,7 @@ class CurrentToVoltage:
                     current_range[i][1],
                 )
                 for i in range(len(current_range))
-            ]
+            ], device=TorchUtils.get_accelerator_type()
         )
         self.current_range = current_range
         self.cut = cut

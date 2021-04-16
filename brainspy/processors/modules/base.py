@@ -97,8 +97,15 @@ class DNPU_Base(nn.Module):
                 )
             return buff
 
-    def hw_eval(self, hw_processor_configs):
-        self.processor.hw_eval(hw_processor_configs)
+    def hw_eval(self, arg):
+        self.eval()
+        if isinstance(arg, Processor):
+            self.processor = arg
+        else:
+            self.processor.load_processor(arg)
+        assert torch.equal(self.control_low.cpu().half(), self.get_control_ranges()[0,:].cpu().half()), 'Low control voltage ranges for the new processor are different than the control voltage ranges for which the DNPU was trained.'
+        assert torch.equal(self.control_high.cpu().half(), self.get_control_ranges()[1,:].cpu().half()), 'High control voltage ranges for the new processor are different than the control voltage ranges for which the DNPU was trained.'
+ 
 
     def is_hardware(self):
         return self.processor.is_hardware

@@ -33,10 +33,10 @@ class HardwareProcessor(nn.Module):
         self.logger = logger
         # TODO: Manage amplification from this class
         self.amplification = configs["driver"]["amplification"]
-        self.clipping_value = [
-            configs["driver"]["output_clipping_range"][0] * self.amplification,
-            configs["driver"]["output_clipping_range"][1] * self.amplification,
-        ]
+        self.clipping_value = torch.tensor([
+            configs["driver"]["output_clipping_range"][0] * self.amplification[0],
+            configs["driver"]["output_clipping_range"][1] * self.amplification[0],
+        ], device=TorchUtils.get_accelerator_type())
 
     def forward(self, x):
         with torch.no_grad():
@@ -45,6 +45,9 @@ class HardwareProcessor(nn.Module):
             if self.logger is not None:
                 self.logger.log_output(x)
         return TorchUtils.get_tensor_from_numpy(output[mask])
+
+    def get_clipping_value(self):
+        return self.clipping_value.T
 
     def forward_numpy(self, x):
         return self.driver.forward_numpy(x)

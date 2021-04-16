@@ -63,7 +63,8 @@ class SurrogateModel(nn.Module):
             output = self.forward(inputs_torch)
         return TorchUtils.get_numpy_from_tensor(output)
 
-
+    def get_clipping_value(self):
+        return self.clipping_value
 
     def reset(self):
         print("Warning: Reset function in Surrogate Model not implemented.")
